@@ -20,11 +20,11 @@ public class DefaultLoginAuthenticationFilter extends UsernamePasswordAuthentica
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
-        String email = request.getParameter("email");
+        String username = obtainUsername(request);
         String password = obtainPassword(request);
 
         UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(email, password);
+                new UsernamePasswordAuthenticationToken(username, password);
 
         return authenticationManager.authenticate(authRequest);
     }

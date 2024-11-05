@@ -17,14 +17,14 @@ public class UserService {
 
     public void joinUser(UserJoinRequestDto dto) {
 
-        if (userRepository.existsByEmail(dto.email())) {
+        if (userRepository.existsByUsername(dto.username())) {
             throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
         }
 
         User user = User.builder()
-                .name(dto.name())
-                .email(dto.email())
+                .username(dto.username())
                 .password(bCryptPasswordEncoder.encode(dto.password()))
+                .fullName(dto.fullName())
                 .role(Role.USER)
                 .region(dto.region())
                 .sex(dto.sex())
