@@ -1,6 +1,7 @@
 package com.donggu.server.domain.auth.provider;
 
 import com.donggu.server.domain.auth.token.AuthToken;
+import com.donggu.server.domain.user.domain.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,14 @@ public class AuthTokenProvider {
     @Autowired
     public AuthTokenProvider(@Value("${jwt.secret}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    }
+
+    public AuthToken createAccessToken(User user) {
+        if (user.getUsername()==null) {
+            return AuthToken.of("");
+        }
+
+        return createAccessToken(user.getUsername());
     }
 
     public AuthToken createAccessToken(String username) {
