@@ -29,9 +29,15 @@ public class User {
 
     private String region;
 
+    private Sex sex;
+
     private double height;
 
     private double weight;
 
     private Position position;
+
+    public void updateRole(Role role) {
+        this.role = role;
+    }
 }
