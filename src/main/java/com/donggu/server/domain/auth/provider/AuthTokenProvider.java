@@ -1,6 +1,8 @@
 package com.donggu.server.domain.auth.provider;
 
-import com.donggu.server.domain.auth.token.AuthToken;
+import com.donggu.server.domain.auth.token.AccessToken;
+import com.donggu.server.domain.auth.token.RefreshToken;
+import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -16,8 +18,10 @@ import java.util.Date;
 @Component
 public class AuthTokenProvider {
 
-    @Value("${jwt.tokenExpiry}")
-    private Long expiredMs;
+    @Value("${jwt.accessExpirationTime}")
+    private Long ACCESS_EXPIRATION_TIME;
+    @Value("${jwt.refreshExpirationTime}")
+    private Long REFRESH_EXPIRATION_TIME;
     private final SecretKey secretKey;
 
     @Autowired
@@ -25,22 +29,48 @@ public class AuthTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public AuthToken createAccessToken(User user) {
+    public AccessToken createAccessToken(User user) {
         if (user.getUsername()==null) {
-            return AuthToken.of("");
+            return AccessToken.of("");
         }
 
-        return createAccessToken(user.getUsername());
+        return createAccessToken(user.getUsername(), user.getRole());
     }
 
-    public AuthToken createAccessToken(String username) {
+    public AccessToken createAccessToken(String username, Role role) {
         String token = Jwts.builder()
                 .subject(username)
+                .claim("type", "access")
+                .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
                 .signWith(secretKey)
                 .compact();
 
-        return AuthToken.of(token);
+        return AccessToken.of(token);
+    }
+
+    public RefreshToken createRefreshToken(User user) {
+        if (user.getUsername()==null) {
+            return RefreshToken.of("");
+        }
+
+        return createRefreshToken(user.getUsername());
+    }
+
+    public RefreshToken createRefreshToken(String username) {
+        String token = Jwts.builder()
+                .subject(username)
+                .claim("type", "refresh")
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .signWith(secretKey)
+                .compact();
+
+        return RefreshToken.of(token);
+    }
+
+    public long getRefreshExpirationTime() {
+        return REFRESH_EXPIRATION_TIME;
     }
 }
