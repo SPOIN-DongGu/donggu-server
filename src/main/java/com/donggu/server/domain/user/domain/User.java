@@ -28,16 +28,19 @@ public class User {
     private String fullName;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private String region;
 
-    private Sex sex;
+    @Enumerated(EnumType.ORDINAL)
+    private Gender gender;
 
     private double height;
 
     private double weight;
 
+    @Enumerated(EnumType.STRING)
     private Position position;
 
     public void updateRole(Role role) {

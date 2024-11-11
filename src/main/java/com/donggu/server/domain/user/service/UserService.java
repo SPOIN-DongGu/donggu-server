@@ -27,12 +27,16 @@ public class UserService {
                 .fullName(dto.fullName())
                 .role(Role.USER)
                 .region(dto.region())
-                .sex(dto.sex())
+                .gender(dto.sex())
                 .height(dto.height())
                 .weight(dto.weight())
                 .position(dto.position())
                 .build();
 
         userRepository.save(user);
+    }
+
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

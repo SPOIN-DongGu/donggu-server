@@ -4,6 +4,7 @@ import com.donggu.server.domain.auth.token.AccessToken;
 import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +73,30 @@ public class AuthTokenProvider {
 
     public long getRefreshExpirationTime() {
         return REFRESH_EXPIRATION_TIME;
+    }
+
+    public Boolean validateToken(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException("만료된 토큰");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("잘못된 토큰");
+        }
+    }
+
+    public String getSubject(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 }

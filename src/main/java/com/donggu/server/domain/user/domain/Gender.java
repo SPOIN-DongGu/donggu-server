@@ -1,5 +1,5 @@
 package com.donggu.server.domain.user.domain;
 
-public enum Sex {
+public enum Gender {
     MALE, FEMALE
 }
