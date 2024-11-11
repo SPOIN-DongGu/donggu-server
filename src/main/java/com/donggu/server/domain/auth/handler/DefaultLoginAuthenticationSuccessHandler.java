@@ -4,7 +4,6 @@ import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.token.AccessToken;
 import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.dto.SecurityUserDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,19 +13,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 @RequiredArgsConstructor
 public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final AuthTokenProvider authTokenProvider;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+                                        Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
 
         AccessToken accessToken = authTokenProvider.createAccessToken(userDetails.getUser());
@@ -35,7 +31,7 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.OK.value());
-        response.getWriter().write(objectMapper.writeValueAsString(accessToken));
+        response.setHeader("Authorization", "Bearer " + accessToken.token());
         response.addCookie(createCookie(refreshToken));
     }
 
