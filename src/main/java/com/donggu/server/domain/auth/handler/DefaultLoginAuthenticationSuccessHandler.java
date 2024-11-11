@@ -25,8 +25,8 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
                                         Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
 
-        AccessToken accessToken = authTokenProvider.createAccessToken(userDetails.getUser());
-        RefreshToken refreshToken = authTokenProvider.createRefreshToken(userDetails.getUser());
+        AccessToken accessToken = authTokenProvider.createAccessToken(userDetails.user());
+        RefreshToken refreshToken = authTokenProvider.createRefreshToken(userDetails.user());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
