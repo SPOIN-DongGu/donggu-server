@@ -40,8 +40,32 @@ public class Pickup {
 
     // 최대 참가 인원
     @Column(nullable = false)
-    private int maxParticipant;
+    private Integer maxParticipant;
 
     // 현재 참가 인원
-    private int currentParticipant;
+    private Integer currentParticipant;
+
+    public void updateDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void updateRegion(String region) {
+        this.region = region;
+    }
+
+    public void updateLocation(String location) {
+        this.location = location;
+    }
+
+    public void updateGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void updatePrice(Long price) {
+        this.price = price;
+    }
+
+    public void updateMaxParticipant(Integer maxParticipant) {
+        this.maxParticipant = maxParticipant;
+    }
 }

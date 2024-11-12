@@ -11,10 +11,10 @@ public record PickupResponseDto(
         @NotNull String location,
         Gender gender,
         Long price,
-        @NotNull int maxParticipant,
-        int currentParticipant
+        @NotNull Integer maxParticipant,
+        Integer currentParticipant
 ) {
-    public static PickupResponseDto of(LocalDateTime dateTime, String region, String location, Gender gender, Long price, int maxParticipant, int currentParticipant) {
+    public static PickupResponseDto of(LocalDateTime dateTime, String region, String location, Gender gender, Long price, Integer maxParticipant, Integer currentParticipant) {
         return new PickupResponseDto(dateTime, region, location, gender, price, maxParticipant, currentParticipant);
     }
 }

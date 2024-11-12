@@ -1,7 +1,7 @@
 package com.donggu.server.domain.pickup.service;
 
 import com.donggu.server.domain.pickup.domain.Pickup;
-import com.donggu.server.domain.pickup.dto.PickupRegisterRequestDto;
+import com.donggu.server.domain.pickup.dto.PickupRequestDto;
 import com.donggu.server.domain.pickup.dto.PickupResponseDto;
 import com.donggu.server.domain.pickup.repository.PickupRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class PickupService {
 
     private final PickupRepository pickupRepository;
 
-    public void registerPickup(PickupRegisterRequestDto dto) {
+    public void registerPickup(PickupRequestDto dto) {
         Pickup pickup = Pickup.builder()
                 .dateTime(dto.dateTime())
                 .region(dto.region())
@@ -61,5 +61,30 @@ public class PickupService {
                         pickup.getCurrentParticipant()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public void updatePickup(Long pickupId, PickupRequestDto dto) {
+        Pickup pickup = pickupRepository.findById(pickupId).orElseThrow();
+
+        if (dto.dateTime() != null) {
+            pickup.updateDateTime(dto.dateTime());
+        }
+        if (dto.region() != null) {
+            pickup.updateRegion(dto.region());
+        }
+        if (dto.location() != null) {
+            pickup.updateLocation(dto.location());
+        }
+        if (dto.gender() != null) {
+            pickup.updateGender(dto.gender());
+        }
+        if (dto.price() != null) {
+            pickup.updatePrice(dto.price());
+        }
+        if (dto.maxParticipant() != null) {
+            pickup.updateMaxParticipant(dto.maxParticipant());
+        }
+
+        pickupRepository.save(pickup);
     }
 }

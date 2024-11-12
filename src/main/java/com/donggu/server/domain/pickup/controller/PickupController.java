@@ -1,6 +1,6 @@
 package com.donggu.server.domain.pickup.controller;
 
-import com.donggu.server.domain.pickup.dto.PickupRegisterRequestDto;
+import com.donggu.server.domain.pickup.dto.PickupRequestDto;
 import com.donggu.server.domain.pickup.dto.PickupResponseDto;
 import com.donggu.server.domain.pickup.service.PickupService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class PickupController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/")
-    public ResponseEntity<Void> registerPickup(@RequestBody PickupRegisterRequestDto dto) {
+    public ResponseEntity<Void> registerPickup(@RequestBody PickupRequestDto dto) {
         pickupService.registerPickup(dto);
         return ResponseEntity.ok().build();
     }
@@ -39,5 +39,12 @@ public class PickupController {
     @GetMapping("/")
     public ResponseEntity<List<PickupResponseDto>> getAllPickup() {
         return ResponseEntity.ok(pickupService.getAllPickup());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{pickupId}")
+    public ResponseEntity<Void> updatePickup(@PathVariable String pickupId, @RequestBody PickupRequestDto dto) {
+        pickupService.updatePickup(Long.valueOf(pickupId), dto);
+        return ResponseEntity.ok().build();
     }
 }
