@@ -25,7 +25,7 @@ public class UserService {
                 .username(dto.username())
                 .password(bCryptPasswordEncoder.encode(dto.password()))
                 .fullName(dto.fullName())
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .region(dto.region())
                 .gender(dto.sex())
                 .height(dto.height())
