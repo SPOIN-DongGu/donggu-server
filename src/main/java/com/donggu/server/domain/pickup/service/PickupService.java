@@ -18,11 +18,14 @@ public class PickupService {
 
     public void registerPickup(PickupRequestDto dto) {
         Pickup pickup = Pickup.builder()
-                .dateTime(dto.dateTime())
+                .date(dto.date())
+                .startTime(dto.startTime())
+                .endTime(dto.endTime())
                 .region(dto.region())
                 .location(dto.location())
                 .gender(dto.gender())
                 .price(dto.price())
+                .gameType(dto.gameType())
                 .maxParticipant(dto.maxParticipant())
                 .currentParticipant(0)
                 .build();
@@ -39,10 +42,13 @@ public class PickupService {
     public PickupResponseDto getPickup(Long pickupId) {
         return pickupRepository.findById(pickupId)
                 .map(pickup -> PickupResponseDto.of(
-                        pickup.getDateTime(),
+                        pickup.getDate(),
+                        pickup.getStartTime(),
+                        pickup.getEndTime(),
                         pickup.getRegion(),
                         pickup.getLocation(),
                         pickup.getGender(),
+                        pickup.getGameType(),
                         pickup.getPrice(),
                         pickup.getMaxParticipant(),
                         pickup.getCurrentParticipant()
@@ -52,10 +58,13 @@ public class PickupService {
     public List<PickupResponseDto> getAllPickup() {
         return pickupRepository.findAll().stream()
                 .map(pickup -> PickupResponseDto.of(
-                        pickup.getDateTime(),
+                        pickup.getDate(),
+                        pickup.getStartTime(),
+                        pickup.getEndTime(),
                         pickup.getRegion(),
                         pickup.getLocation(),
                         pickup.getGender(),
+                        pickup.getGameType(),
                         pickup.getPrice(),
                         pickup.getMaxParticipant(),
                         pickup.getCurrentParticipant()
@@ -66,8 +75,14 @@ public class PickupService {
     public void updatePickup(Long pickupId, PickupRequestDto dto) {
         Pickup pickup = pickupRepository.findById(pickupId).orElseThrow();
 
-        if (dto.dateTime() != null) {
-            pickup.updateDateTime(dto.dateTime());
+        if (dto.date() != null) {
+            pickup.updateDateTime(dto.date());
+        }
+        if (dto.startTime() != null) {
+            pickup.updateStartTime(dto.startTime());
+        }
+        if (dto.endTime() != null) {
+            pickup.updateEndTime(dto.endTime());
         }
         if (dto.region() != null) {
             pickup.updateRegion(dto.region());

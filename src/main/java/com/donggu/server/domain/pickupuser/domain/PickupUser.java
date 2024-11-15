@@ -2,6 +2,7 @@ package com.donggu.server.domain.pickupuser.domain;
 
 import com.donggu.server.domain.pickup.domain.Pickup;
 import com.donggu.server.domain.user.domain.User;
+import com.donggu.server.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PickupUser {
+public class PickupUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

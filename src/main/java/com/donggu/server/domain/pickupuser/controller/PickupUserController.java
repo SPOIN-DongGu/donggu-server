@@ -19,7 +19,6 @@ public class PickupUserController {
 
     // 픽업 게임 신청과 거절을 관리
     // 신청, (관리자)게임 별 신청 목록 조회, (관리자)거절
-    // 픽업 게임 조회 시 신청 상태는 고민을 좀..
 
     @PostMapping("/{pickupId}")
     public ResponseEntity<Void> applyPickup(@PathVariable Long pickupId, @RequestBody Long userId) {

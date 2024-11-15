@@ -1,5 +1,6 @@
 package com.donggu.server.domain.user.domain;
 
+import com.donggu.server.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Entity @Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Table(name = "users")
+public class User extends BaseEntity {
 
     // pk
     @Id

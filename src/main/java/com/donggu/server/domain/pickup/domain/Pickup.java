@@ -1,27 +1,34 @@
 package com.donggu.server.domain.pickup.domain;
 
 import com.donggu.server.domain.user.domain.Gender;
+import com.donggu.server.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pickup {
+public class Pickup extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 게임 일시 및 시간
+    // 게임 일시
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     // 지역명
     @Column(length = 32)
@@ -35,6 +42,9 @@ public class Pickup {
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
+    // 5vs5, 3vs3의 5나 3 등을 저장
+    private int gameType;
+
     // 참가비
     private Long price;
 
@@ -45,8 +55,16 @@ public class Pickup {
     // 현재 참가 인원
     private Integer currentParticipant;
 
-    public void updateDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void updateDateTime(LocalDate date) {
+        this.date = date;
+    }
+
+    public void updateStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void updateEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public void updateRegion(String region) {
