@@ -1,4 +1,4 @@
-package com.donggu.server.domain.pickupuser.domain;
+package com.donggu.server.domain.pickupjoin.domain;
 
 public enum Status {
     PENDING, APPROVED, REJECTED

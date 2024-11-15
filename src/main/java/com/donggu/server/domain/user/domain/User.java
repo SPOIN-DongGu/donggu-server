@@ -25,25 +25,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    // 본명
-    @Column(nullable = false)
-    private String fullName;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    private String region;
-
-    @Enumerated(EnumType.ORDINAL)
-    private Gender gender;
-
-    private double height;
-
-    private double weight;
-
-    @Enumerated(EnumType.STRING)
-    private Position position;
 
     public void updateRole(Role role) {
         this.role = role;

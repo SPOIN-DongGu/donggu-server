@@ -24,13 +24,7 @@ public class UserService {
         User user = User.builder()
                 .username(dto.username())
                 .password(bCryptPasswordEncoder.encode(dto.password()))
-                .fullName(dto.fullName())
                 .role(Role.ROLE_USER)
-                .region(dto.region())
-                .gender(dto.gender())
-                .height(dto.height())
-                .weight(dto.weight())
-                .position(dto.position())
                 .build();
 
         userRepository.save(user);
