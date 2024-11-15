@@ -29,4 +29,8 @@ public class PickupUser {
     private Pickup pickup;
 
     private Status status;
+
+    public void updateStatue(Status status) {
+        this.status = status;
+    }
 }

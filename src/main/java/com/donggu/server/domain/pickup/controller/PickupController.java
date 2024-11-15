@@ -26,14 +26,14 @@ public class PickupController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{pickupId}")
-    public ResponseEntity<Void> deletePickup(@PathVariable String pickupId) {
-        pickupService.deletePickup(Long.valueOf(pickupId));
+    public ResponseEntity<Void> deletePickup(@PathVariable Long pickupId) {
+        pickupService.deletePickup(pickupId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{pickupId}")
-    public ResponseEntity<PickupResponseDto> getPickup(@PathVariable String pickupId) {
-        return ResponseEntity.ok(pickupService.getPickup(Long.valueOf(pickupId)));
+    public ResponseEntity<PickupResponseDto> getPickup(@PathVariable Long pickupId) {
+        return ResponseEntity.ok(pickupService.getPickup(pickupId));
     }
 
     @GetMapping("/")
@@ -43,8 +43,8 @@ public class PickupController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{pickupId}")
-    public ResponseEntity<Void> updatePickup(@PathVariable String pickupId, @RequestBody PickupRequestDto dto) {
-        pickupService.updatePickup(Long.valueOf(pickupId), dto);
+    public ResponseEntity<Void> updatePickup(@PathVariable Long pickupId, @RequestBody PickupRequestDto dto) {
+        pickupService.updatePickup(pickupId, dto);
         return ResponseEntity.ok().build();
     }
 }
