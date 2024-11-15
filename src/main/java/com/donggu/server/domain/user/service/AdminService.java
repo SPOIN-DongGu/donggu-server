@@ -15,11 +15,11 @@ public class AdminService {
     public void changeUserRoleToAdmin(Long adminId, Long userId) {
         User admin = userRepository.findById(adminId).orElseThrow();
 
-        if (admin.getRole()!= Role.ADMIN) {
+        if (admin.getRole()!= Role.ROLE_ADMIN) {
             throw new IllegalArgumentException("관리자가 아닙니다.");
         }
 
         User user = userRepository.findById(userId).orElseThrow();
-        user.updateRole(Role.ADMIN);
+        user.updateRole(Role.ROLE_ADMIN);
     }
 }

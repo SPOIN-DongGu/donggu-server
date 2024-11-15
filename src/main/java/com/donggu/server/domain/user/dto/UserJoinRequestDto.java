@@ -8,7 +8,7 @@ public record UserJoinRequestDto(
         String password,
         String fullName,
         String region,
-        Gender sex,
+        Gender gender,
         double height,
         double weight,
         Position position

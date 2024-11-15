@@ -58,14 +58,10 @@ public class PickupUserService {
                 .toList();
     }
 
-    public void handleUserApply(Long pickupId, Long userId, Status status) {
-        Pickup pickup = pickupService.findPickupById(pickupId);
-        User user = userService.findUserById(userId);
+    public void handleUserApply(Long pickupUserId, Status status) {
+        PickupUser pickupUser = pickupUserRepository.findById(pickupUserId).orElseThrow();
 
-        PickupUser pickupUser = pickupUserRepository.findByPickupAndUser(pickup, user);
-        if (pickupUser == null) {
-            throw new IllegalArgumentException("존재하지 않는 신청입니다");
-        } else if (pickupUser.getStatus() == Status.PENDING) {
+        if (pickupUser.getStatus() == Status.PENDING) {
             pickupUser.updateStatue(status);
         }
 

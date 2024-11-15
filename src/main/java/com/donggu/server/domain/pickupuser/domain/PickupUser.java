@@ -15,6 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "pickup_user")
 public class PickupUser extends BaseEntity {
 
     @Id

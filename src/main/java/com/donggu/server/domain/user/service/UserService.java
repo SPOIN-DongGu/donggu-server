@@ -27,7 +27,7 @@ public class UserService {
                 .fullName(dto.fullName())
                 .role(Role.ROLE_USER)
                 .region(dto.region())
-                .gender(dto.sex())
+                .gender(dto.gender())
                 .height(dto.height())
                 .weight(dto.weight())
                 .position(dto.position())

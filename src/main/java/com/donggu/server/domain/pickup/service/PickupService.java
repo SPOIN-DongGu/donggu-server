@@ -33,45 +33,6 @@ public class PickupService {
         pickupRepository.save(pickup);
     }
 
-    public void deletePickup(Long pickupId) {
-        Pickup pickup = pickupRepository.findById(pickupId)
-                .orElseThrow();
-        pickupRepository.delete(pickup);
-    }
-
-    public PickupResponseDto getPickup(Long pickupId) {
-        return pickupRepository.findById(pickupId)
-                .map(pickup -> PickupResponseDto.of(
-                        pickup.getDate(),
-                        pickup.getStartTime(),
-                        pickup.getEndTime(),
-                        pickup.getRegion(),
-                        pickup.getLocation(),
-                        pickup.getGender(),
-                        pickup.getGameType(),
-                        pickup.getPrice(),
-                        pickup.getMaxParticipant(),
-                        pickup.getCurrentParticipant()
-                )).orElseThrow();
-    }
-
-    public List<PickupResponseDto> getAllPickup() {
-        return pickupRepository.findAll().stream()
-                .map(pickup -> PickupResponseDto.of(
-                        pickup.getDate(),
-                        pickup.getStartTime(),
-                        pickup.getEndTime(),
-                        pickup.getRegion(),
-                        pickup.getLocation(),
-                        pickup.getGender(),
-                        pickup.getGameType(),
-                        pickup.getPrice(),
-                        pickup.getMaxParticipant(),
-                        pickup.getCurrentParticipant()
-                ))
-                .collect(Collectors.toList());
-    }
-
     public void updatePickup(Long pickupId, PickupRequestDto dto) {
         Pickup pickup = pickupRepository.findById(pickupId).orElseThrow();
 
@@ -101,6 +62,45 @@ public class PickupService {
         }
 
         pickupRepository.save(pickup);
+    }
+
+    public void deletePickup(Long pickupId) {
+        Pickup pickup = pickupRepository.findById(pickupId)
+                .orElseThrow();
+        pickupRepository.delete(pickup);
+    }
+
+    public List<PickupResponseDto> getAllPickup() {
+        return pickupRepository.findAll().stream()
+                .map(pickup -> PickupResponseDto.of(
+                        pickup.getDate(),
+                        pickup.getStartTime(),
+                        pickup.getEndTime(),
+                        pickup.getRegion(),
+                        pickup.getLocation(),
+                        pickup.getGender(),
+                        pickup.getGameType(),
+                        pickup.getPrice(),
+                        pickup.getMaxParticipant(),
+                        pickup.getCurrentParticipant()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public PickupResponseDto getPickup(Long pickupId) {
+        return pickupRepository.findById(pickupId)
+                .map(pickup -> PickupResponseDto.of(
+                        pickup.getDate(),
+                        pickup.getStartTime(),
+                        pickup.getEndTime(),
+                        pickup.getRegion(),
+                        pickup.getLocation(),
+                        pickup.getGender(),
+                        pickup.getGameType(),
+                        pickup.getPrice(),
+                        pickup.getMaxParticipant(),
+                        pickup.getCurrentParticipant()
+                )).orElseThrow();
     }
 
     public Pickup findPickupById(Long id) {

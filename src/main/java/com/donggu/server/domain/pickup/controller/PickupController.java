@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pickup/admin")
+@RequestMapping("/pickup")
 @RequiredArgsConstructor
 public class PickupController {
 
@@ -25,6 +25,14 @@ public class PickupController {
         return ResponseEntity.ok().build();
     }
 
+    // [관리자] 픽업 게임 수정
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{pickupId}")
+    public ResponseEntity<Void> updatePickup(@PathVariable Long pickupId, @RequestBody PickupRequestDto dto) {
+        pickupService.updatePickup(pickupId, dto);
+        return ResponseEntity.ok().build();
+    }
+
     // [관리자] 픽업 게임 삭제
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{pickupId}")
@@ -33,23 +41,15 @@ public class PickupController {
         return ResponseEntity.ok().build();
     }
 
-    // [일반/관리자] 픽업 게임 게임별 조회
-    @GetMapping("/{pickupId}")
-    public ResponseEntity<PickupResponseDto> getPickup(@PathVariable Long pickupId) {
-        return ResponseEntity.ok(pickupService.getPickup(pickupId));
-    }
-
     // [일반/관리자] 픽업 게임 전체 조회
     @GetMapping("/")
     public ResponseEntity<List<PickupResponseDto>> getAllPickup() {
         return ResponseEntity.ok(pickupService.getAllPickup());
     }
 
-    // [관리자] 픽업 게임 수정
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/{pickupId}")
-    public ResponseEntity<Void> updatePickup(@PathVariable Long pickupId, @RequestBody PickupRequestDto dto) {
-        pickupService.updatePickup(pickupId, dto);
-        return ResponseEntity.ok().build();
+    // [일반/관리자] 픽업 게임 게임별 조회
+    @GetMapping("/{pickupId}")
+    public ResponseEntity<PickupResponseDto> getPickup(@PathVariable Long pickupId) {
+        return ResponseEntity.ok(pickupService.getPickup(pickupId));
     }
 }
