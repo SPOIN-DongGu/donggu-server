@@ -87,4 +87,8 @@ public class PickupService {
 
         pickupRepository.save(pickup);
     }
+
+    public Pickup findPickupById(Long id) {
+        return pickupRepository.findById(id).orElseThrow();
+    }
 }
