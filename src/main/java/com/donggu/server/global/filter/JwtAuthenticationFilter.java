@@ -28,13 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // 접근을 어떻게 허용하지ㅜㅜ..
-        String path = request.getRequestURI();
-        if (path.endsWith("/pickup/")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         // 1. 토큰 검증
         // 2. 유저 확인
         // 3. 인증 정보 저장
@@ -54,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith(BEARER)) {
-            throw new IllegalArgumentException("잘못된 접근");
+            return null;
         }
 
         String token = authHeader.substring(BEARER.length());
