@@ -2,6 +2,8 @@ package com.donggu.server.domain.user.service;
 
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.domain.user.dto.SecurityUserDetails;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class SecurityUserDetailsService {
         User user = userService.findUserByUsername(username);
 
         if (user == null) {
-            throw new IllegalArgumentException("유저가 존재하지 않음");
+            throw new CustomException(ErrorCode.NOT_FOUND);
         }
 
         return new SecurityUserDetails(user);

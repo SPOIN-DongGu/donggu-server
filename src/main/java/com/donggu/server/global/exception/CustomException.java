@@ -3,7 +3,7 @@ package com.donggu.server.global.exception;
 import lombok.Getter;
 
 @Getter
-public class CustomException extends Exception{
+public class CustomException extends RuntimeException{
     private final ErrorCode errorCode;
     private final String detail;
 

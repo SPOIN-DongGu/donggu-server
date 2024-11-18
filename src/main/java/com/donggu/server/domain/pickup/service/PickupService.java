@@ -4,6 +4,8 @@ import com.donggu.server.domain.pickup.domain.Pickup;
 import com.donggu.server.domain.pickup.dto.PickupRequestDto;
 import com.donggu.server.domain.pickup.dto.PickupResponseDto;
 import com.donggu.server.domain.pickup.repository.PickupRepository;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,8 @@ public class PickupService {
     }
 
     public void updatePickup(Long pickupId, PickupRequestDto dto) {
-        Pickup pickup = pickupRepository.findById(pickupId).orElseThrow();
+        Pickup pickup = pickupRepository.findById(pickupId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         if (dto.date() != null) {
             pickup.updateDateTime(dto.date());
@@ -66,7 +69,7 @@ public class PickupService {
 
     public void deletePickup(Long pickupId) {
         Pickup pickup = pickupRepository.findById(pickupId)
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         pickupRepository.delete(pickup);
     }
 
@@ -100,10 +103,11 @@ public class PickupService {
                         pickup.getPrice(),
                         pickup.getMaxParticipant(),
                         pickup.getCurrentParticipant()
-                )).orElseThrow();
+                )).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
     public Pickup findPickupById(Long id) {
-        return pickupRepository.findById(id).orElseThrow();
+        return pickupRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 }

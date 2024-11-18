@@ -2,6 +2,8 @@ package com.donggu.server.global.filter;
 
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.user.service.SecurityUserDetailsService;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,6 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return authTokenProvider.getSubject(token);
         }
 
-        throw new IllegalArgumentException("잘못된 토큰");
+        throw new CustomException(ErrorCode.INVALID_TOKEN);
     }
 }

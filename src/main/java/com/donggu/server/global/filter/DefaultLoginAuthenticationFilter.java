@@ -1,5 +1,7 @@
 package com.donggu.server.global.filter;
 
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -17,7 +19,7 @@ public class DefaultLoginAuthenticationFilter extends UsernamePasswordAuthentica
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
         if ("application/json".equals(request.getContentType()) && request.getMethod().equals("POST")) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
 
         String username = obtainUsername(request);

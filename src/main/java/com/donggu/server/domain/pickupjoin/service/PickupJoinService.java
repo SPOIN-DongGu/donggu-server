@@ -9,6 +9,8 @@ import com.donggu.server.domain.pickupjoin.dto.PickupJoinResponseDto;
 import com.donggu.server.domain.pickupjoin.repository.PickupJoinRepository;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.domain.user.service.UserService;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class PickupJoinService {
         User user = userService.findUserById(userId);
 
         if (pickupJoinRepository.findByPickupAndUser(pickup, user) != null) {
-            throw new IllegalArgumentException("이미 신청한 게임입니다");
+            throw new CustomException(ErrorCode.ALREADY_APPLY);
         }
 
         PickupJoin pickupJoin = PickupJoin.builder()
@@ -61,12 +63,13 @@ public class PickupJoinService {
     }
 
     public void handleUserApply(Long pickupUserId, Status status) {
-        PickupJoin pickupJoin = pickupJoinRepository.findById(pickupUserId).orElseThrow();
+        PickupJoin pickupJoin = pickupJoinRepository.findById(pickupUserId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         if (pickupJoin.getStatus() == Status.PENDING) {
             pickupJoin.updateStatue(status);
         }
 
-        throw new IllegalArgumentException("이미 처리된 신청입니다");
+        throw new CustomException(ErrorCode.ALREADY_PROCESSED);
     }
 }

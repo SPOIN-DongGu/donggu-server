@@ -4,6 +4,8 @@ import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.domain.user.dto.UserJoinRequestDto;
 import com.donggu.server.domain.user.repository.UserRepository;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
     public void joinUser(UserJoinRequestDto dto) {
 
         if (userRepository.existsByUsername(dto.username())) {
-            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+            throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
         }
 
         User user = User.builder()
@@ -35,6 +37,7 @@ public class UserService {
     }
 
     public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 }

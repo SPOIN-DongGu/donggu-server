@@ -4,6 +4,8 @@ import com.donggu.server.domain.auth.token.AccessToken;
 import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
+import com.donggu.server.global.exception.CustomException;
+import com.donggu.server.global.exception.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -85,9 +87,9 @@ public class AuthTokenProvider {
                     .getExpiration()
                     .before(new Date());
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("만료된 토큰");
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         } catch (Exception e) {
-            throw new IllegalArgumentException("잘못된 토큰");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 
