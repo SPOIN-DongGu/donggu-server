@@ -6,18 +6,20 @@ import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SecurityUserDetailsService {
+public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
 
     public UserDetails loadUserByUsername(String username) {
-        User user = userService.findUserByUsername(username);
+        User user = userService.findByUsername(username);
 
         if (user == null) {
+            System.out.println(username);
             throw new CustomException(ErrorCode.NOT_FOUND);
         }
 

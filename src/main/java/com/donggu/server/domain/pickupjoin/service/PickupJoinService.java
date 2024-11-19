@@ -26,7 +26,7 @@ public class PickupJoinService {
 
     public void applyPickup(Long pickupId, Long userId, PickupJoinRequestDto dto) {
         Pickup pickup = pickupService.findPickupById(pickupId);
-        User user = userService.findUserById(userId);
+        User user = userService.findById(userId);
 
         if (pickupJoinRepository.findByPickupAndUser(pickup, user) != null) {
             throw new CustomException(ErrorCode.ALREADY_APPLY);

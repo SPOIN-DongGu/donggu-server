@@ -1,5 +1,7 @@
 package com.donggu.server.global.config;
 
+import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationFailureHandler;
+import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationSuccessHandler;
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.user.service.SecurityUserDetailsService;
 import com.donggu.server.global.filter.DefaultLoginAuthenticationFilter;
@@ -26,6 +28,8 @@ public class SecurityConfig {
 
     private final AuthTokenProvider authTokenProvider;
     private final SecurityUserDetailsService securityUserDetailsService;
+    private final DefaultLoginAuthenticationSuccessHandler successHandler;
+    private final DefaultLoginAuthenticationFailureHandler failureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,7 +39,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
-                                "/", "/login", "/join", "/auth/refresh",
+                                "/", "/login", "/user/join", "/auth/refresh", "/user/",
                                 "/actuator/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -46,11 +50,22 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new DefaultLoginAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))),
+                .addFilterBefore(defaultLoginAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, securityUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public DefaultLoginAuthenticationFilter defaultLoginAuthenticationFilter(AuthenticationManager authenticationManager) {
+        DefaultLoginAuthenticationFilter filter = new DefaultLoginAuthenticationFilter(
+                authenticationManager,
+                successHandler,
+                failureHandler
+        );
+        filter.setFilterProcessesUrl("/login");
+        return filter;
     }
 
     @Bean
