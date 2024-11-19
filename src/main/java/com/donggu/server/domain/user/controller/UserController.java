@@ -24,6 +24,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // 테스트를 위한 임시 API
     @GetMapping("/")
     @Operation(summary = "user 목록 조회", description = "테스트를 위한 회원 목록 조회")
     public ResponseEntity<List<User>> getUserList() {

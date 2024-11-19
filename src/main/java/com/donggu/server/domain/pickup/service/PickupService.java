@@ -76,6 +76,7 @@ public class PickupService {
     public List<PickupResponseDto> getAllPickup() {
         return pickupRepository.findAll().stream()
                 .map(pickup -> PickupResponseDto.of(
+                        pickup.getId(),
                         pickup.getDate(),
                         pickup.getStartTime(),
                         pickup.getEndTime(),
@@ -93,6 +94,7 @@ public class PickupService {
     public PickupResponseDto getPickup(Long pickupId) {
         return pickupRepository.findById(pickupId)
                 .map(pickup -> PickupResponseDto.of(
+                        pickup.getId(),
                         pickup.getDate(),
                         pickup.getStartTime(),
                         pickup.getEndTime(),

@@ -14,16 +14,11 @@ public class AdminService {
 
     private final UserRepository userRepository;
 
-    public void changeUserRoleToAdmin(Long adminId, Long userId) {
-        User admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-
-        if (admin.getRole()!= Role.ROLE_ADMIN) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
-
+    // 테스트를 위한 임시 메서드
+    public void changeUserRoleToAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         user.updateRole(Role.ROLE_ADMIN);
+        userRepository.save(user);
     }
 }

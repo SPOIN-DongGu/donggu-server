@@ -85,7 +85,7 @@ public class AuthTokenProvider {
                     .parseSignedClaims(token)
                     .getPayload()
                     .getExpiration()
-                    .before(new Date());
+                    .after(new Date());
         } catch (ExpiredJwtException e) {
             throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         } catch (Exception e) {

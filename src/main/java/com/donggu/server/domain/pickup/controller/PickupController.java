@@ -21,7 +21,7 @@ public class PickupController {
     // [관리자] 픽업 게임 등록
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/")
-    @Operation(summary = "픽업 게임 생성", description = "관리자 전용 기능: 게임 정보를 기재해 픽업 게임을 생성합니다")
+    @Operation(summary = "픽업 게임 생성", description = "관리자 전용 기능: 게임 정보를 기재해 픽업 게임을 생성합니다\n시작/종료 시각은 HH:mm:ss형식으로 작성")
     public ResponseEntity<Void> registerPickup(@RequestBody PickupRequestDto dto) {
         pickupService.registerPickup(dto);
         return ResponseEntity.ok().build();
