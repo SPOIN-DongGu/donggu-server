@@ -2,9 +2,8 @@ package com.donggu.server.domain.auth.handler;
 
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.token.AccessToken;
-import com.donggu.server.domain.auth.token.RefreshToken;
+//import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.dto.SecurityUserDetails;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +25,16 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
 
         AccessToken accessToken = authTokenProvider.createAccessToken(userDetails.getSecurityUser());
-        RefreshToken refreshToken = authTokenProvider.createRefreshToken(userDetails.getSecurityUser());
+        // RefreshToken refreshToken = authTokenProvider.createRefreshToken(userDetails.getSecurityUser());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.OK.value());
         response.setHeader("Authorization", "Bearer " + accessToken.token());
-        response.addCookie(createCookie(refreshToken));
+        //response.addCookie(createCookie(refreshToken));
     }
 
-    private Cookie createCookie(RefreshToken refreshToken) {
+    /*private Cookie createCookie(RefreshToken refreshToken) {
         Cookie cookie = new Cookie("refresh", refreshToken.token());
         cookie.setMaxAge((int) authTokenProvider.getRefreshExpirationTime());
         cookie.setHttpOnly(true);
@@ -44,5 +43,5 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
         // 위 두 설정의 경우 https 통신에서 필요하다는데 일단 보류
 
         return cookie;
-    }
+    }*/
 }

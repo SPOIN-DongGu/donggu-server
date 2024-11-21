@@ -1,7 +1,7 @@
 package com.donggu.server.domain.auth.provider;
 
 import com.donggu.server.domain.auth.token.AccessToken;
-import com.donggu.server.domain.auth.token.RefreshToken;
+//import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.global.exception.CustomException;
@@ -23,8 +23,8 @@ public class AuthTokenProvider {
 
     @Value("${jwt.accessExpirationTime}")
     private Long ACCESS_EXPIRATION_TIME;
-    @Value("${jwt.refreshExpirationTime}")
-    private Long REFRESH_EXPIRATION_TIME;
+    /*@Value("${jwt.refreshExpirationTime}")
+    private Long REFRESH_EXPIRATION_TIME;*/
     private final SecretKey secretKey;
 
     @Autowired
@@ -53,7 +53,7 @@ public class AuthTokenProvider {
         return AccessToken.of(token);
     }
 
-    public RefreshToken createRefreshToken(User user) {
+    /*public RefreshToken createRefreshToken(User user) {
         if (user.getUsername()==null) {
             return RefreshToken.of("");
         }
@@ -75,7 +75,7 @@ public class AuthTokenProvider {
 
     public long getRefreshExpirationTime() {
         return REFRESH_EXPIRATION_TIME;
-    }
+    }*/
 
     public Boolean validateToken(String token) {
         try {
