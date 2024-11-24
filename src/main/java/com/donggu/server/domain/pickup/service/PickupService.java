@@ -8,11 +8,13 @@ import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PickupService {
 
@@ -111,5 +113,9 @@ public class PickupService {
     public Pickup findPickupById(Long id) {
         return pickupRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+    }
+
+    public void savePickup(Pickup pickup) {
+        pickupRepository.save(pickup);
     }
 }

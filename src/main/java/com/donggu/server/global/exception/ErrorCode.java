@@ -11,6 +11,7 @@ public enum ErrorCode {
     ALREADY_APPLY(4002, "이미 신청한 게임입니다", HttpStatus.BAD_REQUEST),
     ALREADY_PROCESSED(4003, "이미 처리된 신청입니다", HttpStatus.BAD_REQUEST),
     USER_ALREADY_EXIST(4004, "이미 존재하는 사용자입니다", HttpStatus.BAD_REQUEST),
+    INVALID_JOIN_USER(4005, "참여자 수가 적절하지 않습니다", HttpStatus.BAD_REQUEST),
     // auth 관련 에러
     INVALID_TOKEN(4011, "올바르지 않은 토큰입니다", HttpStatus.UNAUTHORIZED),
     EXPIRED_TOKEN(4012, "토큰이 만료되었습니다", HttpStatus.UNAUTHORIZED),

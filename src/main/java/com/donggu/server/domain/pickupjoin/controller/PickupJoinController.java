@@ -22,8 +22,8 @@ public class PickupJoinController {
     // 픽업 게임 참여 신청
     @PostMapping("/")
     @Operation(summary = "픽업 게임 신청", description = "회원 전용 기능: 신청자 정보를 기재해 픽업 게임을 신청합니다")
-    public ResponseEntity<Void> applyPickup(@PathVariable Long pickupId, @RequestBody Long userId, @RequestBody PickupJoinRequestDto dto) {
-        pickupJoinService.applyPickup(pickupId, userId, dto);
+    public ResponseEntity<Void> applyPickup(@PathVariable Long pickupId, @RequestBody PickupJoinRequestDto dto) {
+        pickupJoinService.applyPickup(pickupId, dto);
         return ResponseEntity.ok().build();
     }
 
@@ -37,10 +37,10 @@ public class PickupJoinController {
 
     // [관리자] 픽업 게임 참여 신청 승인/거절
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/{pickupUserId}")
+    @PostMapping("/{pickupJoinId}")
     @Operation(summary = "픽업 게임 신청 처리", description = "관리자 전용 기능: 참여 신청에 대해 승인 혹은 거절합니다")
-    public ResponseEntity<Void> handleUserApply(@PathVariable Long pickupId, @PathVariable Long pickupUserId, @RequestBody Status status) {
-        pickupJoinService.handleUserApply(pickupUserId, status);
+    public ResponseEntity<Void> handleUserApply(@PathVariable Long pickupId, @PathVariable Long pickupJoinId, @RequestBody Status status) {
+        pickupJoinService.handleUserApply(pickupId, pickupJoinId, status);
         return ResponseEntity.ok().build();
     }
 }

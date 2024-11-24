@@ -86,4 +86,8 @@ public class Pickup extends BaseEntity {
     public void updateMaxParticipant(Integer maxParticipant) {
         this.maxParticipant = maxParticipant;
     }
+
+    public void updateCurrentParticipant(Integer currentParticipant) {
+        this.currentParticipant = currentParticipant;
+    }
 }

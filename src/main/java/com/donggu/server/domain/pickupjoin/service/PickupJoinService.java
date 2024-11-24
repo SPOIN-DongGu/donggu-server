@@ -13,10 +13,12 @@ import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PickupJoinService {
 
@@ -24,9 +26,9 @@ public class PickupJoinService {
     private final PickupService pickupService;
     private final UserService userService;
 
-    public void applyPickup(Long pickupId, Long userId, PickupJoinRequestDto dto) {
+    public void applyPickup(Long pickupId, PickupJoinRequestDto dto) {
         Pickup pickup = pickupService.findPickupById(pickupId);
-        User user = userService.findById(userId);
+        User user = userService.findById(dto.userId());
 
         if (pickupJoinRepository.findByPickupAndUser(pickup, user) != null) {
             throw new CustomException(ErrorCode.ALREADY_APPLY);
@@ -48,10 +50,11 @@ public class PickupJoinService {
 
     public List<PickupJoinResponseDto> getAppliedUsersByPickup(Long pickupId) {
         Pickup pickup = pickupService.findPickupById(pickupId);
-        List<PickupJoin> pickupUserList = pickupJoinRepository.findAllByPickup(pickup);
+        List<PickupJoin> pickupJoinList = pickupJoinRepository.findAllByPickup(pickup);
 
-        return pickupUserList.stream()
+        return pickupJoinList.stream()
                 .map(pickupJoin -> PickupJoinResponseDto.of(
+                        pickupJoin.getId(),
                         pickupJoin.getName(),
                         pickupJoin.getGender(),
                         pickupJoin.getHeight(),
@@ -62,14 +65,27 @@ public class PickupJoinService {
                 .toList();
     }
 
-    public void handleUserApply(Long pickupUserId, Status status) {
-        PickupJoin pickupJoin = pickupJoinRepository.findById(pickupUserId)
+    public void handleUserApply(Long pickupId, Long pickupJoinId, Status status) {
+        Pickup pickup = pickupService.findPickupById(pickupId);
+
+        PickupJoin pickupJoin = pickupJoinRepository.findById(pickupJoinId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-        if (pickupJoin.getStatus() == Status.PENDING) {
-            pickupJoin.updateStatue(status);
+        if (pickupJoin.getStatus() != Status.PENDING) {
+            throw new CustomException(ErrorCode.ALREADY_PROCESSED);
         }
 
-        throw new CustomException(ErrorCode.ALREADY_PROCESSED);
+        int maxParticipant = pickup.getMaxParticipant();
+        int currentParticipant = pickup.getCurrentParticipant();
+
+        if (status == Status.APPROVED && currentParticipant<maxParticipant) {
+            pickup.updateCurrentParticipant(currentParticipant+1);
+        } else if (status == Status.REJECTED) {
+            pickup.updateCurrentParticipant(Math.max(currentParticipant-1, 0));
+        } else throw new CustomException(ErrorCode.INVALID_JOIN_USER);
+
+        pickupJoin.updateStatue(status);
+        pickupService.savePickup(pickup);
+        pickupJoinRepository.save(pickupJoin);
     }
 }
