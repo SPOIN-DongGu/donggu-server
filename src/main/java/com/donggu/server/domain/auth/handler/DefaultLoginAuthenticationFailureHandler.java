@@ -24,6 +24,6 @@ public class DefaultLoginAuthenticationFailureHandler implements AuthenticationF
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(objectMapper.writeValueAsString("아이디 혹은 비밀번호가 잘못되었습니다."));
+        response.getWriter().write(objectMapper.writeValueAsString("로그인에 실패하였습니다."));
     }
 }

@@ -1,17 +1,15 @@
 package com.donggu.server.domain.user.service;
 
-import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
-import com.donggu.server.domain.user.dto.UserJoinRequestDto;
 import com.donggu.server.domain.user.repository.UserRepository;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -19,25 +17,9 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void joinUser(UserJoinRequestDto dto) {
-
-        if (userRepository.existsByUsername(dto.username())) {
-            throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
-        }
-
-        User user = User.builder()
-                .username(dto.username())
-                .password(bCryptPasswordEncoder.encode(dto.password()))
-                .role(Role.ROLE_USER)
-                .build();
-
-        userRepository.save(user);
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public User findById(Long id) {

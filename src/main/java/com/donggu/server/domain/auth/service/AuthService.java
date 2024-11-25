@@ -19,7 +19,7 @@ public class AuthService {
 
     private final AuthTokenProvider authTokenProvider;
 
-    public void reissueToken(HttpServletRequest request,  HttpServletResponse response) {
+    /*public void reissueToken(HttpServletRequest request,  HttpServletResponse response) {
         // 1. 토큰 추출 후 검증
         // 2. 사용자 확인
         // 3. 사용자의 토큰와 요청된 토큰 일치 확인
@@ -37,7 +37,7 @@ public class AuthService {
         } else {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-    }
+    }*/
 
     private String getRefreshTokenFromCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

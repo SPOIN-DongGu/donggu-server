@@ -20,10 +20,7 @@ public class User extends BaseEntity {
 
     // 아이디
     @Column(nullable = false, unique = true)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

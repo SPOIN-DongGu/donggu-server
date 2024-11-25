@@ -1,7 +1,7 @@
 package com.donggu.server.global.filter;
 
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
-import com.donggu.server.domain.user.service.SecurityUserDetailsService;
+import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import jakarta.servlet.FilterChain;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthTokenProvider authTokenProvider;
-    private final SecurityUserDetailsService securityUserDetailsService;
+    private final PrincipalUserDetailsService principalUserDetailsService;
     private static final String BEARER = "Bearer ";
 
     @Override
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = resolveToken(request);
 
         if (username != null) {
-            UserDetails userDetails = securityUserDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = principalUserDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

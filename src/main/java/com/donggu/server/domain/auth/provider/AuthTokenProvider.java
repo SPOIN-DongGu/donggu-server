@@ -32,15 +32,15 @@ public class AuthTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public AccessToken createAccessToken(User user) {
-        if (user.getUsername()==null) {
+    public AccessToken generateAccessToken(User user) {
+        if (user.getEmail()==null) {
             return AccessToken.of("");
         }
 
-        return createAccessToken(user.getUsername(), user.getRole());
+        return generateAccessToken(user.getEmail(), user.getRole());
     }
 
-    public AccessToken createAccessToken(String username, Role role) {
+    public AccessToken generateAccessToken(String username, Role role) {
         String token = Jwts.builder()
                 .subject(username)
                 .claim("type", "access")
@@ -54,11 +54,11 @@ public class AuthTokenProvider {
     }
 
     /*public RefreshToken createRefreshToken(User user) {
-        if (user.getUsername()==null) {
+        if (user.getEmail()==null) {
             return RefreshToken.of("");
         }
 
-        return createRefreshToken(user.getUsername());
+        return createRefreshToken(user.getEmail());
     }
 
     public RefreshToken createRefreshToken(String username) {

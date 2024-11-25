@@ -3,15 +3,12 @@ package com.donggu.server.global.config;
 import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationFailureHandler;
 import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationSuccessHandler;
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
-import com.donggu.server.domain.user.service.SecurityUserDetailsService;
-import com.donggu.server.global.filter.DefaultLoginAuthenticationFilter;
+import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,9 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final AuthTokenProvider authTokenProvider;
-    private final SecurityUserDetailsService securityUserDetailsService;
-    private final DefaultLoginAuthenticationSuccessHandler successHandler;
-    private final DefaultLoginAuthenticationFailureHandler failureHandler;
+    private final PrincipalUserDetailsService principalUserDetailsService;
+    private final DefaultLoginAuthenticationSuccessHandler oAuthSuccessHandler;
+    private final DefaultLoginAuthenticationFailureHandler oAuthFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -46,32 +43,22 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
+
+                                // 테스트 임시 허용
+                                , "/pickup/**"
                                 ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
+                        // 테스트 임시 주석 .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
                         .anyRequest().authenticated())
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(defaultLoginAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, securityUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(principalUserDetailsService))
+                        .successHandler(oAuthSuccessHandler)
+                        .failureHandler(oAuthFailureHandler)) // oauth2
+                .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public DefaultLoginAuthenticationFilter defaultLoginAuthenticationFilter(AuthenticationManager authenticationManager) {
-        DefaultLoginAuthenticationFilter filter = new DefaultLoginAuthenticationFilter(
-                authenticationManager,
-                successHandler,
-                failureHandler
-        );
-        filter.setFilterProcessesUrl("/login");
-        return filter;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
     }
 }
