@@ -14,7 +14,6 @@ public class PickupJoinController {
 
     private final PickupJoinService pickupJoinService;
 
-    // 픽업 게임 참여 신청
     @PostMapping("/")
     @Operation(summary = "픽업 게임 신청", description = "회원 전용 기능: 신청자 정보를 기재해 픽업 게임을 신청합니다")
     public ResponseEntity<Void> applyPickup(@PathVariable Long pickupId, @RequestBody PickupJoinRequestDto dto) {

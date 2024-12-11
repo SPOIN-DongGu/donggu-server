@@ -16,7 +16,6 @@ public class AdminService {
 
     private final UserRepository userRepository;
 
-    // 테스트를 위한 임시 메서드
     public void changeUserRoleToAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));

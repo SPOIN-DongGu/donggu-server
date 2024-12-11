@@ -27,8 +27,11 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
-    // 테스트를 위한 임시 메서드
     public List<User> getUserList() {
         return userRepository.findAll();
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

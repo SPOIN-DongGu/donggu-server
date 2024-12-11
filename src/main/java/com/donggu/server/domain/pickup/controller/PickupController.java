@@ -16,16 +16,14 @@ public class PickupController {
 
     private final PickupService pickupService;
 
-    // [일반/관리자] 픽업 게임 전체 조회
     @GetMapping("/")
-    @Operation(summary = "픽업 게임 전체 조회", description = "전체 접근 기능: 등록된 픽업 게임 목록을 조회합니다")
+    @Operation(summary = "[전체] 픽업 게임 전체 조회", description = "등록된 픽업 게임 목록을 조회합니다")
     public ResponseEntity<List<PickupResponseDto>> getAllPickup() {
         return ResponseEntity.ok(pickupService.getAllPickup());
     }
 
-    // [일반/관리자] 픽업 게임 게임별 조회
     @GetMapping("/{pickupId}")
-    @Operation(summary = "픽업 게임 상세 조회", description = "전체 접근 기능: 특정 픽업 게임의 상세 정보를 조회합니다")
+    @Operation(summary = "[유저] 픽업 게임 상세 조회", description = "특정 픽업 게임의 상세 정보를 조회합니다")
     public ResponseEntity<PickupResponseDto> getPickup(@PathVariable Long pickupId) {
         return ResponseEntity.ok(pickupService.getPickup(pickupId));
     }

@@ -17,6 +17,9 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -32,22 +35,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                //cors 설정
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+
+                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setMaxAge(3600L);
+
+                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                    return configuration;
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
-                                "/", "/login", "/user/join", "/auth/refresh", "/user/",
+                                "/",
+                                "/login",
+                                "/user/join",
                                 "/actuator/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
-
-                                // 테스트 임시 허용
-                                , "/pickup/**"
                                 ).permitAll()
-                        // 테스트 임시 주석 .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
                         .anyRequest().authenticated())
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
