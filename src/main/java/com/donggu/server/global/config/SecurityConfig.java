@@ -4,6 +4,7 @@ import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationFailureHa
 import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationSuccessHandler;
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
+import com.donggu.server.global.filter.DefaultCorsFilter;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.Collections;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -35,29 +34,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                //cors 설정
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-
-                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                    configuration.setAllowedMethods(Collections.singletonList("*"));
-                    configuration.setAllowCredentials(true);
-                    configuration.setAllowedHeaders(Collections.singletonList("*"));
-                    configuration.setMaxAge(3600L);
-
-                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-                    return configuration;
-                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
                                 "/",
-                                "/login",
-                                "/user/join",
                                 "/actuator/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -74,6 +56,7 @@ public class SecurityConfig {
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
                         .failureHandler(oAuthFailureHandler)) // oauth2
+                .addFilterBefore(new DefaultCorsFilter(), CorsFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
