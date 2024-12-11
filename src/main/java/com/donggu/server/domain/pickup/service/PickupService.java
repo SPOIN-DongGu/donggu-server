@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PickupService {
 
@@ -59,6 +58,7 @@ public class PickupService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
+    @Transactional
     public void savePickup(Pickup pickup) {
         pickupRepository.save(pickup);
     }

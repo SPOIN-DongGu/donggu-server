@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -31,6 +30,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);
     }

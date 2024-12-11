@@ -31,10 +31,9 @@ public class PickupAdminController {
         return ResponseEntity.ok().build();
     }
 
-    // [관리자] 픽업 게임 삭제
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{pickupId}")
-    @Operation(summary = "픽업 게임 삭제", description = "관리자 전용 기능: 등록된 픽업 게임을 삭제합니다")
+    @Operation(summary = "[관리자] 픽업 게임 삭제", description = "등록된 픽업 게임을 삭제합니다")
     public ResponseEntity<Void> deletePickup(@PathVariable Long pickupId) {
         pickupAdminService.deletePickup(pickupId);
         return ResponseEntity.ok().build();

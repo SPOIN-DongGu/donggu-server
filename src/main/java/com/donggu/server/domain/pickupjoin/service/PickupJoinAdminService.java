@@ -10,6 +10,7 @@ import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class PickupJoinAdminService {
                 .toList();
     }
 
+    @Transactional
     public void handleUserApply(Long pickupId, Long pickupJoinId, Status status) {
         Pickup pickup = pickupService.findPickupById(pickupId);
 

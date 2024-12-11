@@ -20,7 +20,7 @@ public class AuthController {
 
     // 추후 refresh 토큰 추가하면 다시 활성화
     /*@PostMapping("/refresh")
-    @Operation(summary = "새 access 발급", description = "refresh 토큰으로 새 access 토큰 발급")
+    @Operation(summary = "[전체] 새 access 발급", description = "refresh 토큰으로 새 access 토큰 발급")
     public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authService.reissueToken(request, response);
         return ResponseEntity.ok().build();
