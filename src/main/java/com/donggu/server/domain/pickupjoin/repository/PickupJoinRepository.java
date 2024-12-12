@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface PickupJoinRepository extends JpaRepository<PickupJoin, Long> {
     List<PickupJoin> findAllByPickup(Pickup pickup);
+    List<PickupJoin> findAllByUser(User user);
 
     PickupJoin findByPickupAndUser(Pickup pickup, User user);
 }
