@@ -24,8 +24,8 @@ public class PickupAdminService {
                 .region(dto.region())
                 .location(dto.location())
                 .gender(dto.gender())
-                .price(dto.price())
                 .gameType(dto.gameType())
+                .price(dto.price())
                 .maxParticipant(dto.maxParticipant())
                 .currentParticipant(0)
                 .build();
@@ -38,7 +38,7 @@ public class PickupAdminService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         if (dto.date() != null) {
-            pickup.updateDateTime(dto.date());
+            pickup.updateDate(dto.date());
         }
         if (dto.startTime() != null) {
             pickup.updateStartTime(dto.startTime());

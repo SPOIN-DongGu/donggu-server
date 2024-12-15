@@ -101,13 +101,4 @@ public class AuthTokenProvider {
                 .getPayload()
                 .getSubject();
     }
-
-    public Role getRole(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("Role", Role.class);
-    }
 }

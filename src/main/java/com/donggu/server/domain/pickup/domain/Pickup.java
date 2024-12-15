@@ -55,7 +55,7 @@ public class Pickup extends BaseEntity {
     // 현재 참가 인원
     private Integer currentParticipant;
 
-    public void updateDateTime(LocalDate date) {
+    public void updateDate(LocalDate date) {
         this.date = date;
     }
 
