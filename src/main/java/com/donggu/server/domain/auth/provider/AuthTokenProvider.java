@@ -21,7 +21,7 @@ import java.util.Date;
 @Component
 public class AuthTokenProvider {
 
-    @Value("${jwt.accessExpirationTime}")
+    @Value("${jwt.access-exp-time}")
     private Long ACCESS_EXPIRATION_TIME;
     /*@Value("${jwt.refreshExpirationTime}")
     private Long REFRESH_EXPIRATION_TIME;*/
