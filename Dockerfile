@@ -2,9 +2,9 @@ FROM openjdk:17
 
 WORKDIR /app
 
-ARG JAR_PATH=build/libs/donggu-0.0.1-SNAPSHOT.jar
+ARG JAR_PATH=build/libs
 
-COPY ${JAR_PATH} /app/donggu.jar
+COPY ${JAR_PATH}/*.jar /app/donggu.jar
 
 ENTRYPOINT ["java", "-jar", "donggu.jar"]
 
