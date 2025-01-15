@@ -44,6 +44,22 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}:donggu-dev .
           docker push ${{ secrets.DOCKER_REPO }}:donggu-dev
 
+    - name: Get GitHub Actions Public IP
+      id: get-ip
+      uses: haythem/public-ip@v1.2
+
+    - name: Allow GitHub Actions IP in Security Group
+      run: |
+        aws ec2 authorize-security-group-ingress \
+          --group-name ${{ secrets.AWS_SG_NAME }} \
+          --protocol tcp \
+          --port 22 \
+          --cidr ${{ steps.get-ip.outputs.ipv4 }}/32
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-northeast-2
+
     - name: Deploy to server
       uses: appleboy/ssh-action@master
       with:
@@ -55,3 +71,15 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPO }}:donggu-dev
           sudo docker-compose up -d
           sudo docker image prune -f
+
+    - name: Remove GitHub Actions IP from Security Group
+      run: |
+        aws ec2 revoke-security-group-ingress \
+          --group-name ${{ secrets.AWS_SG_NAME }} \
+          --protocol tcp \
+          --port 22 \
+          --cidr ${{ steps.get-ip.outputs.ipv4 }}/32
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-northeast-2
