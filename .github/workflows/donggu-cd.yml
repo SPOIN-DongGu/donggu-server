@@ -51,7 +51,7 @@ jobs:
     - name: Allow GitHub Actions IP in Security Group
       run: |
         aws ec2 authorize-security-group-ingress \
-          --group-name ${{ secrets.AWS_SG_NAME }} \
+          --group-id ${{ secrets.AWS_SG_ID }} \
           --protocol tcp \
           --port 22 \
           --cidr ${{ steps.get-ip.outputs.ipv4 }}/32
