@@ -1,0 +1,15 @@
+version: "3.7"
+
+networks:
+  donggu-deploy:
+    driver: bridge;
+
+services:
+  app:
+    image: donggu:latest
+    networks:
+      - donggu-deploy
+    restart: always
+    ports:
+      - 8080:8080
+    container_name: donggu-server-deploy
