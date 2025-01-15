@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/webjars/**"
                                 ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pickup/*").permitAll()
                         .anyRequest().authenticated())
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
