@@ -41,8 +41,8 @@ jobs:
 
     - name: Docker build & push to docker repo
       run: |
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/donggu-dev .
-          docker push ${{ secrets.DOCKER_REPO }}/donggu-dev
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}:donggu-dev .
+          docker push ${{ secrets.DOCKER_REPO }}:donggu-dev
 
     - name: Deploy to server
       uses: appleboy/ssh-action@master
@@ -52,6 +52,6 @@ jobs:
         key: ${{ secrets.KEY }}
         script: |
           sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}/donggu-dev
+          sudo docker pull ${{ secrets.DOCKER_REPO }}:donggu-dev
           sudo docker-compose up -d
           sudo docker image prune -f
