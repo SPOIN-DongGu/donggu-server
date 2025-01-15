@@ -17,7 +17,7 @@ public class PickupJoinController {
 
     private final PickupJoinService pickupJoinService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/join/{userId}")
     @Operation(summary = "[유저] 신청한 픽업 게임 목록 조회", description = "자신이 신청한 픽업 게임의 목록을 조회합니다")
     public ResponseEntity<List<PickupDetailResponseDto>> getAllAppliedPickup(@PathVariable Long userId) {
         return ResponseEntity.ok(pickupJoinService.getAllAppliedPickup(userId));
