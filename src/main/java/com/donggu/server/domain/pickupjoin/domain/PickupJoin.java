@@ -35,7 +35,7 @@ public class PickupJoin extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private double height;
@@ -45,6 +45,7 @@ public class PickupJoin extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Position position;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public void updateStatue(Status status) {
