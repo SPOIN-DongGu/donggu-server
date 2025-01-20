@@ -34,7 +34,6 @@ class OAuth2AttributeProviderTest {
         AuthUserDto dto = oAuth2AttributeProvider.convertUserAttribute("kakao", oAuth2User);
 
         assertNotNull(dto);
-        assertEquals(dto.name(), profile.get("nickname"));
         assertEquals(dto.email(), kakaoAccount.get("email"));
     }
 
@@ -51,7 +50,6 @@ class OAuth2AttributeProviderTest {
         AuthUserDto dto = oAuth2AttributeProvider.convertUserAttribute("google", oAuth2User);
 
         assertNotNull(dto);
-        assertEquals(dto.name(), attribute.get("name"));
         assertEquals(dto.email(), attribute.get("email"));
     }
 

@@ -1,5 +1,7 @@
 package com.donggu.server.domain.user.service;
 
+import com.donggu.server.domain.auth.dto.AuthUserDto;
+import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.domain.user.repository.UserRepository;
 import com.donggu.server.global.exception.CustomException;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +18,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    @Transactional
+    public User registerOrLogin(AuthUserDto authUserDto) {
+        return userRepository.findByEmail(authUserDto.email())
+                .orElseGet(() -> {
+                    User user = User.builder()
+                            .email(authUserDto.email())
+                            .role(Role.ROLE_USER)
+                            .build();
+                    return userRepository.save(user);
+                });
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
     public User findById(Long id) {
@@ -31,7 +45,7 @@ public class UserService {
     }
 
     @Transactional
-    public User saveUser(User user) {
+    public User save(User user) {
         return userRepository.save(user);
     }
 }

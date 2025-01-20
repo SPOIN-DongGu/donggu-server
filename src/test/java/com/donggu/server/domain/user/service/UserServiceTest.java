@@ -40,7 +40,7 @@ class UserServiceTest {
     void findByEmail() {
         when(userRepository.findByEmail("test@donggu.com")).thenReturn(Optional.of(user));
 
-        User testUser = userService.findByEmail("test@donggu.com").orElseThrow();
+        User testUser = userService.findByEmail("test@donggu.com");
 
         assertEquals(testUser, user);
     }
