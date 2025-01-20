@@ -3,11 +3,8 @@ package com.donggu.server.domain.auth.service;
 import com.donggu.server.domain.auth.dto.AuthUserDto;
 import com.donggu.server.domain.auth.dto.PrincipalUserDetails;
 import com.donggu.server.domain.auth.provider.OAuth2AttributeProvider;
-import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.domain.user.service.UserService;
-import com.donggu.server.global.exception.CustomException;
-import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,25 +35,15 @@ public class PrincipalUserDetailsService extends DefaultOAuth2UserService implem
         AuthUserDto authUserDto = oAuth2AttributeProvider
                 .convertUserAttribute(userRequest.getClientRegistration().getRegistrationId(), oAuth2User);
 
-        User user = userService.findByEmail(authUserDto.email()).orElse(registerUser(authUserDto));
+        User user = userService.registerOrLogin(authUserDto);
 
         return new PrincipalUserDetails(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByEmail(username)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        User user = userService.findByEmail(username);
 
         return new PrincipalUserDetails(user);
-    }
-
-    private User registerUser(AuthUserDto authUserDto) {
-        User user = User.builder()
-                .email(authUserDto.email())
-                .role(Role.ROLE_USER)
-                .build();
-
-        return userService.saveUser(user);
     }
 }
