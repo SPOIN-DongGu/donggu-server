@@ -6,7 +6,6 @@ import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
 import com.donggu.server.global.filter.DefaultCorsFilter;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
-import com.donggu.server.global.filter.RequestLoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,7 +57,6 @@ public class SecurityConfig {
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
                         .failureHandler(oAuthFailureHandler)) // oauth2
-                .addFilterBefore(new RequestLoggingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new DefaultCorsFilter(), CorsFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
