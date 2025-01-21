@@ -22,8 +22,8 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String clientIp = getClientIp(request);
-        logger.info("Incomming request: method={}, URI={}, IP={}",
-                request.getMethod(), request.getRequestURI(), clientIp);
+        logger.info("Incomming request: method={}, URI={}, IP={}, User-Agent={}",
+                request.getMethod(), request.getRequestURI(), clientIp, request.getHeader("User-Agent"));
         filterChain.doFilter(request, response);
     }
 
