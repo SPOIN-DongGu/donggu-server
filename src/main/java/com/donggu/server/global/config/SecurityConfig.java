@@ -37,29 +37,29 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new DefaultCorsFilter(), CorsFilter.class)
                 .addFilterBefore(new DefaultServletFilter(), DefaultCorsFilter.class)
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(
-                                "/",
-                                "/actuator/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**"
-                                ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/pickup/*").permitAll()
                         .anyRequest().authenticated())
+                .requiresChannel(https -> https
+                        .anyRequest()
+                        .requiresSecure())
+
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
                         .failureHandler(oAuthFailureHandler)) // oauth2
+
                 .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
