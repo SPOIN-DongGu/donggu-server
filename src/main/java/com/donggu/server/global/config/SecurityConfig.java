@@ -46,9 +46,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/pickup/*").permitAll()
                         .anyRequest().authenticated())
-                .requiresChannel(https -> https
-                        .anyRequest()
-                        .requiresSecure())
 
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
