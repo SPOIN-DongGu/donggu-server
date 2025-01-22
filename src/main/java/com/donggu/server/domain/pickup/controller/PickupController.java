@@ -22,7 +22,7 @@ public class PickupController {
         return ResponseEntity.ok(pickupService.getAllPickup());
     }
 
-    @GetMapping("/{pickupId}")
+    @GetMapping("/detail/{pickupId}")
     @Operation(summary = "[유저] 픽업 게임 상세 조회", description = "특정 픽업 게임의 상세 정보를 조회합니다")
     public ResponseEntity<PickupResponseDto> getPickup(@PathVariable Long pickupId) {
         return ResponseEntity.ok(pickupService.getPickup(pickupId));

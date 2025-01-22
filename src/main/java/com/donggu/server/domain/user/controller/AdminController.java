@@ -27,7 +27,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/{userId}")
+    @PostMapping("/user/add/{userId}")
     @Operation(summary = "[관리자] 권한 변경(USER->ADMIN)", description = "유저에게 관리자 권한을 부여합니다")
     public ResponseEntity<Void> changeUserRoleToAdmin(@PathVariable Long userId) {
         adminService.changeUserRoleToAdmin(userId);
