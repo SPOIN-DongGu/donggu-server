@@ -5,6 +5,7 @@ import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationSuccessHa
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
 import com.donggu.server.global.filter.DefaultCorsFilter;
+import com.donggu.server.global.filter.DefaultServletFilter;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(new DefaultCorsFilter(), CorsFilter.class)
+                .addFilterBefore(new DefaultServletFilter(), DefaultCorsFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -57,7 +60,6 @@ public class SecurityConfig {
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
                         .failureHandler(oAuthFailureHandler)) // oauth2
-                .addFilterBefore(new DefaultCorsFilter(), CorsFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
