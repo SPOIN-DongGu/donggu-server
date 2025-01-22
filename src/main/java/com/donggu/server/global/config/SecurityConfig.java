@@ -44,7 +44,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/pickup/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pickup/detail/*").permitAll()
                         .anyRequest().authenticated())
 
                 .logout(LogoutConfigurer::permitAll)
