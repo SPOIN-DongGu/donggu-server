@@ -16,7 +16,7 @@ public class PickupController {
 
     private final PickupService pickupService;
 
-    @GetMapping
+    @GetMapping("/")
     @Operation(summary = "[전체] 픽업 게임 전체 조회", description = "등록된 픽업 게임 목록을 조회합니다")
     public ResponseEntity<List<PickupResponseDto>> getAllPickup() {
         return ResponseEntity.ok(pickupService.getAllPickup());

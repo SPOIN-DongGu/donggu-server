@@ -19,7 +19,7 @@ public class PickupJoinAdminController {
     private final PickupJoinAdminService pickupJoinAdminService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping
+    @GetMapping("/")
     @Operation(summary = "[관리자] 픽업 게임 신청자 조회", description = "픽업 게임별 신청자 목록을 조회합니다")
     public ResponseEntity<List<PickupJoinResponseDto>> getAppliedUsersByPickup(@PathVariable Long pickupId) {
         return ResponseEntity.ok(pickupJoinAdminService.getAppliedUsersByPickup(pickupId));
