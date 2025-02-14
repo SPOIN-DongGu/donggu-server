@@ -20,7 +20,7 @@ public class AdminController {
     private final UserService userService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping
+    @GetMapping("/")
     @Operation(summary = "[관리자] user 목록 조회", description = "전체 회원 목록을 조회합니다")
     public ResponseEntity<List<User>> getUserList() {
         return ResponseEntity.ok(userService.getUserList());
