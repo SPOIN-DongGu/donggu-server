@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class ApiWhiteListFilter extends OncePerRequestFilter {
 
     private static final List<Pattern> WHITE_LIST_ENDPOINTS = List.of(
+            Pattern.compile("^/login.*$"),
             Pattern.compile("^/oauth2/authorization/\\w+$"),
             Pattern.compile("^/admin/user.*$"),
             Pattern.compile("^/admin/pickup.*$"),
