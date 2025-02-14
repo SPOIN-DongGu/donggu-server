@@ -16,7 +16,7 @@ public class PickupAdminController {
     private final PickupAdminService pickupAdminService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "[관리자] 픽업 게임 생성", description = "게임 정보를 기재해 픽업 게임을 생성합니다(시간: HH:MM:SS)")
     public ResponseEntity<Void> registerPickup(@RequestBody PickupRequestDto dto) {
         pickupAdminService.registerPickup(dto);
