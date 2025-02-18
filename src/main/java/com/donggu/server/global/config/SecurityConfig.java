@@ -47,8 +47,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET, "/pickup/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/pickup/detail/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickup/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
                         .anyRequest().authenticated())
 
                 .logout(LogoutConfigurer::permitAll)
