@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/{pickupId}/apply")
+@RequestMapping("/api/admin/{pickupId}/apply")
 @RequiredArgsConstructor
 public class PickupJoinAdminController {
 
