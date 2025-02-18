@@ -25,7 +25,7 @@ public class ApiWhiteListFilter extends OncePerRequestFilter {
             Pattern.compile("^/admin/pickup/.*$"),
             Pattern.compile("^/admin/\\d+/apply/.*$"),
             Pattern.compile("^/pickup/.*$"),
-            Pattern.compile("^/.well-known/acme-challenge/$")
+            Pattern.compile("^/.well-known/acme-challenge/.*$")
     );
 
     @Override
