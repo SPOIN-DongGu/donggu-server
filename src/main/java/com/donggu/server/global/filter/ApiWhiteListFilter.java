@@ -21,10 +21,10 @@ public class ApiWhiteListFilter extends OncePerRequestFilter {
     private static final List<Pattern> WHITE_LIST_ENDPOINTS = List.of(
             Pattern.compile("^/login.*$"),
             Pattern.compile("^/oauth2/authorization/\\w+$"),
-            Pattern.compile("^/admin/user/.*$"),
-            Pattern.compile("^/admin/pickup/.*$"),
-            Pattern.compile("^/admin/\\d+/apply/.*$"),
-            Pattern.compile("^/pickup/.*$"),
+            Pattern.compile("^/api/admin/user/.*$"),
+            Pattern.compile("^/api/admin/pickup/.*$"),
+            Pattern.compile("^/api/admin/\\d+/apply/.*$"),
+            Pattern.compile("^/api/pickup/.*$"),
             Pattern.compile("^/.well-known/acme-challenge/.*$")
     );
 
