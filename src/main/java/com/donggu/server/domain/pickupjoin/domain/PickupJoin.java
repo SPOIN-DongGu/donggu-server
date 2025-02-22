@@ -35,6 +35,8 @@ public class PickupJoin extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    private int age;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

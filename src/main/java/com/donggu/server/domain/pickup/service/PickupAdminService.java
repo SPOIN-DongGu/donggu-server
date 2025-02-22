@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PickupAdminService {
 
     private final PickupRepository pickupRepository;
 
+    @Transactional
     public void registerPickup(PickupRequestDto dto) {
         Pickup pickup = Pickup.builder()
                 .date(dto.date())
@@ -33,6 +33,7 @@ public class PickupAdminService {
         pickupRepository.save(pickup);
     }
 
+    @Transactional
     public void updatePickup(Long pickupId, PickupRequestDto dto) {
         Pickup pickup = pickupRepository.findById(pickupId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
@@ -65,6 +66,7 @@ public class PickupAdminService {
         pickupRepository.save(pickup);
     }
 
+    @Transactional
     public void deletePickup(Long pickupId) {
         Pickup pickup = pickupRepository.findById(pickupId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
