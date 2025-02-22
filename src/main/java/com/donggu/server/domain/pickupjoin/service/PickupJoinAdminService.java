@@ -26,15 +26,7 @@ public class PickupJoinAdminService {
         List<PickupJoin> pickupJoinList = pickupJoinRepository.findAllByPickup(pickup);
 
         return pickupJoinList.stream()
-                .map(pickupJoin -> PickupJoinResponseDto.of(
-                        pickupJoin.getId(),
-                        pickupJoin.getName(),
-                        pickupJoin.getGender(),
-                        pickupJoin.getHeight(),
-                        pickupJoin.getWeight(),
-                        pickupJoin.getPosition(),
-                        pickupJoin.getStatus()
-                ))
+                .map(PickupJoinResponseDto::from)
                 .toList();
     }
 

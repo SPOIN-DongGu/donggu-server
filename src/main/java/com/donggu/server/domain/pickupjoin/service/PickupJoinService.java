@@ -63,6 +63,7 @@ public class PickupJoinService {
                 .pickup(pickup)
                 .user(user)
                 .name(dto.name())
+                .age(dto.age())
                 .gender(dto.gender())
                 .height(dto.height())
                 .weight(dto.weight())
