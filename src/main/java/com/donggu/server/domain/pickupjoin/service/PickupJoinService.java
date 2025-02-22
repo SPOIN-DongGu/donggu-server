@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PickupJoinService {
 
@@ -51,6 +50,7 @@ public class PickupJoinService {
                 .toList();
     }
 
+    @Transactional
     public void applyPickup(Long pickupId, PickupJoinRequestDto dto) {
         Pickup pickup = pickupService.findPickupById(pickupId);
         User user = userService.findById(dto.userId());
