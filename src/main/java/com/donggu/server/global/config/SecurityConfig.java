@@ -47,21 +47,23 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/pickup/").permitAll()
+                        /*.requestMatchers(HttpMethod.GET, "/api/pickup/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()*/
+                        .anyRequest().permitAll())
 
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                // oauth2
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
-                        .failureHandler(oAuthFailureHandler)) // oauth2
+                        .failureHandler(oAuthFailureHandler));
 
-                .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+                //.addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
