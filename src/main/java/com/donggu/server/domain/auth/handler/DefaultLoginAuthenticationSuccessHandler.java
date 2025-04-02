@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -44,7 +43,7 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
         String tempToken = UUID.randomUUID().toString();
 
         String redisKey = "tempToken:"+tempToken;
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        //redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.opsForValue().set(redisKey, user.getId().toString(), Duration.ofMinutes(EXPIRE));
 
         log.info("[TempToken] TempToken generated and stored in Redis");

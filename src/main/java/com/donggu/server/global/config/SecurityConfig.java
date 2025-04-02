@@ -52,7 +52,7 @@ public class SecurityConfig {
                             "/swagger-ui/**",
                             "/swagger-ui.html",
                             "/swagger-resources/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers("/api/user/token", "/api/user/token/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
                         .anyRequest().authenticated())
