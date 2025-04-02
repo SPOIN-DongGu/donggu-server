@@ -43,7 +43,6 @@ public class DefaultLoginAuthenticationSuccessHandler implements AuthenticationS
         String tempToken = UUID.randomUUID().toString();
 
         String redisKey = "tempToken:"+tempToken;
-        //redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.opsForValue().set(redisKey, user.getId().toString(), Duration.ofMinutes(EXPIRE));
 
         log.info("[TempToken] TempToken generated and stored in Redis");

@@ -48,13 +48,9 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/api-docs/**",
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/swagger-resources/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/user/token", "/api/user/token/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/pickup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickup", "/api/pickup/detail/*").permitAll()
                         .anyRequest().authenticated())
 
                 .logout(LogoutConfigurer::permitAll)

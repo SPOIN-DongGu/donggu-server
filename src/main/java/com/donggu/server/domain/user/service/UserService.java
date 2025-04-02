@@ -117,7 +117,6 @@ public class UserService {
         String redisKey = "blacklist:" + refresh;
 
         if (refresh != null && authTokenProvider.validateToken(refresh)) {
-            //redisTemplate.setValueSerializer(new StringRedisSerializer());
             redisTemplate.opsForValue().set(redisKey, "logout", Duration.ofMinutes(REFRESH_EXPIRATION_TIME));
         } else {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
