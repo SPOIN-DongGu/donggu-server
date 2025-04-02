@@ -2,6 +2,7 @@ package com.donggu.server.domain.auth.provider;
 
 import com.donggu.server.domain.auth.token.AccessToken;
 //import com.donggu.server.domain.auth.token.RefreshToken;
+import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.global.exception.CustomException;
@@ -21,10 +22,10 @@ import java.util.Date;
 @Component
 public class AuthTokenProvider {
 
-    @Value("${jwt.access-exp-time}")
+    @Value("${jwt.accessExpirationTime}")
     private Long ACCESS_EXPIRATION_TIME;
-    /*@Value("${jwt.refreshExpirationTime}")
-    private Long REFRESH_EXPIRATION_TIME;*/
+    @Value("${jwt.refreshExpirationTime}")
+    private Long REFRESH_EXPIRATION_TIME;
     private final SecretKey secretKey;
 
     @Autowired
@@ -53,18 +54,19 @@ public class AuthTokenProvider {
         return AccessToken.of(token);
     }
 
-    /*public RefreshToken createRefreshToken(User user) {
+    public RefreshToken generateRefreshToken(User user) {
         if (user.getEmail()==null) {
             return RefreshToken.of("");
         }
 
-        return createRefreshToken(user.getEmail());
+        return generateRefreshToken(user.getEmail(), user.getRole());
     }
 
-    public RefreshToken createRefreshToken(String username) {
+    public RefreshToken generateRefreshToken(String username, Role role) {
         String token = Jwts.builder()
                 .subject(username)
                 .claim("type", "refresh")
+                .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
                 .signWith(secretKey)
@@ -75,7 +77,7 @@ public class AuthTokenProvider {
 
     public long getRefreshExpirationTime() {
         return REFRESH_EXPIRATION_TIME;
-    }*/
+    }
 
     public Boolean validateToken(String token) {
         try {
@@ -100,5 +102,14 @@ public class AuthTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public Role getRole(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("role", Role.class);
     }
 }

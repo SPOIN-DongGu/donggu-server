@@ -4,13 +4,11 @@ import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationFailureHa
 import com.donggu.server.domain.auth.handler.DefaultLoginAuthenticationSuccessHandler;
 import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
-import com.donggu.server.global.filter.DefaultServletFilter;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,18 +37,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(new DefaultServletFilter(), UsernamePasswordAuthenticationFilter.class)
-
-                .cors(Customizer.withDefaults())
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests((auth) -> auth
-                        /*.requestMatchers(HttpMethod.GET, "/api/pickup/").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/swagger-resources/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
-                        .anyRequest().authenticated()*/
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
 
                 .logout(LogoutConfigurer::permitAll)
                 .sessionManagement((session) -> session
@@ -61,9 +60,9 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(principalUserDetailsService))
                         .successHandler(oAuthSuccessHandler)
-                        .failureHandler(oAuthFailureHandler));
+                        .failureHandler(oAuthFailureHandler))
 
-                //.addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authTokenProvider, principalUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -71,11 +70,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080", "http://172.30.1.82:3000", "https://donggu-582cd.web.app"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        // 프론트 url 환경 변수 처리 필요
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://donggu-sp.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Accept", "Authorization", "X-Real-IP"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+        configuration.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
