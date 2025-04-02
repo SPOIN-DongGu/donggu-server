@@ -24,9 +24,9 @@ import java.util.Date;
 @Slf4j
 public class AuthTokenProvider {
 
-    @Value("${jwt.accessExpirationTime}")
+    @Value("${jwt.access-expiration-time}")
     private Long ACCESS_EXPIRATION_TIME;
-    @Value("${jwt.refreshExpirationTime}")
+    @Value("${jwt.refresh-expiration-time}")
     private Long REFRESH_EXPIRATION_TIME;
     private final SecretKey secretKey;
 
@@ -85,10 +85,6 @@ public class AuthTokenProvider {
         log.info("[JWT] Issue refresh token: " + email);
 
         return RefreshToken.of(token);
-    }
-
-    public long getRefreshExpirationTime() {
-        return REFRESH_EXPIRATION_TIME;
     }
 
     public Boolean validateToken(String token) {

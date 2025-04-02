@@ -6,6 +6,8 @@ import com.donggu.server.domain.auth.provider.AuthTokenProvider;
 import com.donggu.server.domain.auth.service.PrincipalUserDetailsService;
 import com.donggu.server.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,6 +31,9 @@ import java.util.Arrays;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    @Value("${front-url}")
+    private String FRONT_URL;
+
     private final AuthTokenProvider authTokenProvider;
     private final PrincipalUserDetailsService principalUserDetailsService;
     private final DefaultLoginAuthenticationSuccessHandler oAuthSuccessHandler;
@@ -47,6 +52,7 @@ public class SecurityConfig {
                             "/swagger-ui/**",
                             "/swagger-ui.html",
                             "/swagger-resources/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pickup/detail/*").permitAll()
                         .anyRequest().authenticated())
@@ -70,10 +76,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 프론트 url 환경 변수 처리 필요
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://donggu-sp.com"));
+        configuration.setAllowedOriginPatterns(Arrays.asList(FRONT_URL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Accept", "Authorization", "X-Real-IP"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Accept", "Authorization", "X-Real-IP", "tempToken"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Authorization");
 
