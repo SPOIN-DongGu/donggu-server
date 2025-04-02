@@ -7,6 +7,8 @@ import com.donggu.server.domain.user.repository.UserRepository;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +16,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
 
     @Transactional
     public User registerOrLogin(AuthUserDto authUserDto) {
+        log.info("[User] Trying to login ...");
+
         return userRepository.findByEmail(authUserDto.email())
                 .orElseGet(() -> {
                     User user = User.builder()
@@ -44,7 +49,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }

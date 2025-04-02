@@ -12,6 +12,8 @@ import com.donggu.server.domain.user.service.UserService;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PickupJoinService {
 
     private final PickupJoinRepository pickupJoinRepository;
@@ -26,6 +29,8 @@ public class PickupJoinService {
     private final UserService userService;
 
     public List<PickupDetailResponseDto> getAllAppliedPickup(Long userId) {
+        log.info("[Pickup Join] Get All pickup By User");
+
         User user = userService.findById(userId);
         List<PickupJoin> pickupJoinList = pickupJoinRepository.findAllByUser(user);
 
@@ -52,6 +57,8 @@ public class PickupJoinService {
 
     @Transactional
     public void applyPickup(Long pickupId, PickupJoinRequestDto dto) {
+        log.info("[Pickup Join] Apply pickup game: {}", pickupId);
+
         Pickup pickup = pickupService.findPickupById(pickupId);
         User user = userService.findById(dto.userId());
 

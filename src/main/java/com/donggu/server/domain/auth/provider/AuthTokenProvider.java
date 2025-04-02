@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
 @Component
+@Slf4j
 public class AuthTokenProvider {
 
     @Value("${jwt.accessExpirationTime}")
@@ -41,15 +43,20 @@ public class AuthTokenProvider {
         return generateAccessToken(user.getEmail(), user.getRole());
     }
 
-    public AccessToken generateAccessToken(String username, Role role) {
+    public AccessToken generateAccessToken(String email, Role role) {
+        Date issuedAt = new Date();
+        Date expiration = new Date(issuedAt.getTime() + ACCESS_EXPIRATION_TIME);
+
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .claim("type", "access")
                 .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
+                .issuedAt(issuedAt)
+                .expiration(expiration)
                 .signWith(secretKey)
                 .compact();
+
+        log.info("[JWT] Issue access token: " + email);
 
         return AccessToken.of(token);
     }
@@ -62,15 +69,20 @@ public class AuthTokenProvider {
         return generateRefreshToken(user.getEmail(), user.getRole());
     }
 
-    public RefreshToken generateRefreshToken(String username, Role role) {
+    public RefreshToken generateRefreshToken(String email, Role role) {
+        Date issuedAt = new Date();
+        Date expiration = new Date(issuedAt.getTime() + REFRESH_EXPIRATION_TIME);
+
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .claim("type", "refresh")
                 .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .issuedAt(issuedAt)
+                .expiration(expiration)
                 .signWith(secretKey)
                 .compact();
+
+        log.info("[JWT] Issue refresh token: " + email);
 
         return RefreshToken.of(token);
     }

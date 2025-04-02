@@ -9,21 +9,25 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final AuthTokenProvider authTokenProvider;
 
+    @Transactional
     public void reissueToken(HttpServletRequest request,  HttpServletResponse response) {
         // 1. 토큰 추출 후 검증
         // 2. 사용자 확인
         // 3. 사용자의 토큰와 요청된 토큰 일치 확인
         // 4. 코튼 재발급
+        log.info("[Reissue Token] Starting reissue token ...");
 
         String refresh = getRefreshTokenFromCookies(request);
 
