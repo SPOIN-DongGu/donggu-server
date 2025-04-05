@@ -3,10 +3,9 @@ name: CD with Gradle
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -49,7 +48,7 @@ jobs:
       uses: haythem/public-ip@v1.2
 
     - name: configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_NAME }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -66,13 +65,16 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ec2-user
+        username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.KEY }}
         script: |
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}:donggu-dev
-          docker-compose up -d
-          docker image prune -f
+          RUNNING_CONTAINERS=$(sudo docker ps -q --filter "name=^(?!.*redis).*$")
+          if [ ! -z "$RUNNING_CONTAINERS" ]; then
+            sudo docker rm -f $RUNNING_CONTAINERS
+          fi
+          sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
+          sudo docker compose up -d
+          sudo docker image prune -f
 
     - name: Remove GitHub Actions IP from Security Group
       run: |
