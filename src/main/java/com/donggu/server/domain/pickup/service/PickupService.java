@@ -6,6 +6,8 @@ import com.donggu.server.domain.pickup.repository.PickupRepository;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +15,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PickupService {
 
     private final PickupRepository pickupRepository;
 
     public List<PickupResponseDto> getAllPickup() {
+        log.info("[Pickup] Get all pickup game list");
+
         return pickupRepository.findAll().stream()
                 .map(pickup -> PickupResponseDto.of(
                         pickup.getId(),
@@ -36,6 +41,8 @@ public class PickupService {
     }
 
     public PickupResponseDto getPickup(Long pickupId) {
+        log.info("[Pickup] Get detail info of pickup game");
+
         return pickupRepository.findById(pickupId)
                 .map(pickup -> PickupResponseDto.of(
                         pickup.getId(),

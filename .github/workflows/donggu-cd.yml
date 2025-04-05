@@ -3,10 +3,9 @@ name: CD with Gradle
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -27,7 +26,7 @@ jobs:
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
-          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > ./application.yml
       shell: bash
 
     - name: Build with Gradle
@@ -41,12 +40,18 @@ jobs:
 
     - name: Docker build & push to docker repo
       run: |
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}:donggu-dev .
-          docker push ${{ secrets.DOCKER_REPO }}:donggu-dev
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}:latest .
+          docker push ${{ secrets.DOCKER_REPO }}:latest
 
     - name: Get GitHub Actions Public IP
       id: get-ip
       uses: haythem/public-ip@v1.2
+
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_NAME }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: Allow GitHub Actions IP in Security Group
       run: |
@@ -55,22 +60,21 @@ jobs:
           --protocol tcp \
           --port 22 \
           --cidr ${{ steps.get-ip.outputs.ipv4 }}/32
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-northeast-2
 
     - name: Deploy to server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ec2-user
+        username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.KEY }}
         script: |
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}:donggu-dev
-          docker-compose up -d
-          docker image prune -f
+          RUNNING_CONTAINERS=$(sudo docker ps -q --filter "name=^(?!.*redis).*$")
+          if [ ! -z "$RUNNING_CONTAINERS" ]; then
+            sudo docker rm -f $RUNNING_CONTAINERS
+          fi
+          sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
+          sudo docker compose up -d
+          sudo docker image prune -f
 
     - name: Remove GitHub Actions IP from Security Group
       run: |
@@ -79,7 +83,3 @@ jobs:
           --protocol tcp \
           --port 22 \
           --cidr ${{ steps.get-ip.outputs.ipv4 }}/32
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-northeast-2

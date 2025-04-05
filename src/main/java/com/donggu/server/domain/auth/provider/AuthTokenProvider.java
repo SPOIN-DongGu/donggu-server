@@ -2,6 +2,7 @@ package com.donggu.server.domain.auth.provider;
 
 import com.donggu.server.domain.auth.token.AccessToken;
 //import com.donggu.server.domain.auth.token.RefreshToken;
+import com.donggu.server.domain.auth.token.RefreshToken;
 import com.donggu.server.domain.user.domain.Role;
 import com.donggu.server.domain.user.domain.User;
 import com.donggu.server.global.exception.CustomException;
@@ -15,16 +16,18 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
 @Component
+@Slf4j
 public class AuthTokenProvider {
 
-    @Value("${jwt.access-exp-time}")
+    @Value("${jwt.access-expiration-time}")
     private Long ACCESS_EXPIRATION_TIME;
-    /*@Value("${jwt.refreshExpirationTime}")
-    private Long REFRESH_EXPIRATION_TIME;*/
+    @Value("${jwt.refresh-expiration-time}")
+    private Long REFRESH_EXPIRATION_TIME;
     private final SecretKey secretKey;
 
     @Autowired
@@ -40,42 +43,49 @@ public class AuthTokenProvider {
         return generateAccessToken(user.getEmail(), user.getRole());
     }
 
-    public AccessToken generateAccessToken(String username, Role role) {
+    public AccessToken generateAccessToken(String email, Role role) {
+        Date issuedAt = new Date();
+        Date expiration = new Date(issuedAt.getTime() + ACCESS_EXPIRATION_TIME);
+
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .claim("type", "access")
                 .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
+                .issuedAt(issuedAt)
+                .expiration(expiration)
                 .signWith(secretKey)
                 .compact();
+
+        log.info("[JWT] Issue access token: " + email);
 
         return AccessToken.of(token);
     }
 
-    /*public RefreshToken createRefreshToken(User user) {
+    public RefreshToken generateRefreshToken(User user) {
         if (user.getEmail()==null) {
             return RefreshToken.of("");
         }
 
-        return createRefreshToken(user.getEmail());
+        return generateRefreshToken(user.getEmail(), user.getRole());
     }
 
-    public RefreshToken createRefreshToken(String username) {
+    public RefreshToken generateRefreshToken(String email, Role role) {
+        Date issuedAt = new Date();
+        Date expiration = new Date(issuedAt.getTime() + REFRESH_EXPIRATION_TIME);
+
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .claim("type", "refresh")
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .claim("role", role)
+                .issuedAt(issuedAt)
+                .expiration(expiration)
                 .signWith(secretKey)
                 .compact();
 
+        log.info("[JWT] Issue refresh token: " + email);
+
         return RefreshToken.of(token);
     }
-
-    public long getRefreshExpirationTime() {
-        return REFRESH_EXPIRATION_TIME;
-    }*/
 
     public Boolean validateToken(String token) {
         try {
@@ -100,5 +110,14 @@ public class AuthTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public Role getRole(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("role", Role.class);
     }
 }

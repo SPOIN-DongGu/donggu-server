@@ -6,17 +6,21 @@ import com.donggu.server.domain.pickup.repository.PickupRepository;
 import com.donggu.server.global.exception.CustomException;
 import com.donggu.server.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PickupAdminService {
 
     private final PickupRepository pickupRepository;
 
-    @Transactional
     public void registerPickup(PickupRequestDto dto) {
+        log.info("[Pickup] Register pickup game");
+
         Pickup pickup = Pickup.builder()
                 .date(dto.date())
                 .startTime(dto.startTime())
@@ -35,6 +39,8 @@ public class PickupAdminService {
 
     @Transactional
     public void updatePickup(Long pickupId, PickupRequestDto dto) {
+        log.info("[Pickup] Update pickup game info");
+
         Pickup pickup = pickupRepository.findById(pickupId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
@@ -66,10 +72,9 @@ public class PickupAdminService {
         pickupRepository.save(pickup);
     }
 
-    @Transactional
     public void deletePickup(Long pickupId) {
-        Pickup pickup = pickupRepository.findById(pickupId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-        pickupRepository.delete(pickup);
+        log.info("[Pickup] Delete pickup game");
+
+        pickupRepository.deleteById(pickupId);
     }
 }
